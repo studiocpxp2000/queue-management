@@ -11,11 +11,23 @@ app.use(cors());
 app.use(express.json());
 
 const server = http.createServer(app);
+
+// Increase max listeners to handle many concurrent Socket.io connections
+server.maxConnections = 1024;
+process.setMaxListeners(0); // Remove EventEmitter limit warnings
+
 const io = new Server(server, {
     cors: {
         origin: "*", 
         methods: ["GET", "POST"]
-    }
+    },
+    // Performance tuning for high concurrency
+    pingTimeout: 60000,        // 60s before considering a client dead (default: 20s)
+    pingInterval: 25000,       // Check every 25s (default: 25s)
+    transports: ['websocket', 'polling'], // Allow fallback to polling
+    maxHttpBufferSize: 1e6,    // 1MB max message size
+    connectTimeout: 45000,     // 45s connection timeout
+    allowEIO3: true            // Allow Engine.IO v3 clients
 });
 
 const authenticateAdmin = (req, res, next) => {
@@ -153,9 +165,11 @@ let currentTimerTimeout = null;
 let currentEndTime = 0;
 let pendingTimerId = null;
 let pendingTimerDuration = 0;
+let connectionCount = 0;
 
 io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
+    connectionCount++;
+    if (connectionCount % 50 === 0) console.log(`Active connections: ${connectionCount}`);
 
     // Provide initial state
     socket.on('requestInitialState', () => {
@@ -221,7 +235,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
+        connectionCount--;
     });
 });
 

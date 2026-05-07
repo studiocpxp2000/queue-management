@@ -8,6 +8,11 @@ const db = new sqlite3.Database(dbPath, (err) => {
     } else {
         console.log('Connected to the SQLite database.');
         
+        // Performance: WAL mode allows concurrent reads during writes
+        db.run(`PRAGMA journal_mode=WAL`);
+        // Wait up to 5 seconds if the database is locked instead of failing instantly
+        db.run(`PRAGMA busy_timeout=5000`);
+        
         db.run(`CREATE TABLE IF NOT EXISTS players (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
