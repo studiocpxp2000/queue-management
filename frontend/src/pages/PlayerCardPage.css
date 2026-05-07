@@ -82,18 +82,19 @@
   color: inherit;
 }
 
-/* The 'S' unit label — polished for a more premium look */
+/* NBA Red 'S' unit — highly polished and distinct from the digits */
 .timer-unit {
   font-family: 'Outfit', sans-serif;
   font-weight: 600;
-  font-size: 3cqw;
-  color: inherit;
-  opacity: 0.6;
+  font-size: 2.2cqw;
+  color: var(--accent-red); /* Brand Red */
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-left: 0.8cqw;
+  margin-left: 1cqw;
   align-self: flex-end;
-  margin-bottom: 1.2cqw;
+  margin-bottom: 1.8cqw; /* Slightly raised from the absolute bottom */
+  letter-spacing: 0.15em;
+  opacity: 1; /* Full brightness for the brand color */
+  text-shadow: 0 0 10px rgba(227, 24, 55, 0.3);
 }
 
 .timer-danger {
