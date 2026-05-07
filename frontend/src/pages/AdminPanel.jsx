@@ -12,6 +12,7 @@ const AdminPanel = () => {
   });
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
   const [players, setPlayers] = useState([]);
@@ -122,7 +123,32 @@ const AdminPanel = () => {
             </div>
             <div className="input-group">
               <label className="input-label">Password</label>
-              <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="input-field" required />
+              <div style={{ position: 'relative' }}>
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  value={password} 
+                  onChange={e => setPassword(e.target.value)} 
+                  className="input-field" 
+                  style={{ width: '100%', paddingRight: '40px' }}
+                  required 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'var(--text-secondary)'
+                  }}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
             <button type="submit" className="btn" style={{ width: '100%' }}>Login</button>
           </form>
