@@ -156,7 +156,7 @@ const InputPage = () => {
           <br />
           <p>We’ll notify you when it’s your turn, get ready to beat the clock!</p>
           <br />
-          <p>See You!<br/><strong>Team Tissot.</strong></p>
+          <p>See You!<br/><strong>Team Tissot</strong></p>
         </>
       );
     }
