@@ -8,6 +8,8 @@ services:
       - proxy
     environment:
       - PORT=3012
+      - ADMIN_USER=${ADMIN_USER}
+      - ADMIN_PASS=${ADMIN_PASS}
     volumes:
       # Bind mount the local SQLite file so it is not treated as a directory by Docker
       - ./backend/database.sqlite:/usr/src/app/backend/database.sqlite

@@ -66,14 +66,21 @@ jobs:
           script: |
             mkdir -p /opt/queue-management
             cd /opt/queue-management
-            
+
+            # Write environment variables to .env file for Docker Compose to pick up
+            cat > .env <<EOF
+            PORT=3012
+            ADMIN_USER=${{ secrets.ADMIN_USER }}
+            ADMIN_PASS=${{ secrets.ADMIN_PASS }}
+            EOF
+
             # Login to GHCR to pull the private image
             echo ${{ secrets.GH_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-            
+
             # Create an empty db file if it doesn't exist so Docker doesn't accidentally map a folder
             mkdir -p backend
             touch backend/database.sqlite
-            
+
             # Pull new image and recreate container
             docker compose pull
             docker compose up -d --force-recreate
