@@ -82,16 +82,18 @@
   color: inherit;
 }
 
-/* The 's' unit label — uses Outfit so it looks clearly different from the digit */
+/* The 'S' unit label — polished for a more premium look */
 .timer-unit {
   font-family: 'Outfit', sans-serif;
-  font-weight: 700;
-  font-size: 5cqw;
+  font-weight: 600;
+  font-size: 3cqw;
   color: inherit;
-  opacity: 0.75;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-left: 0.8cqw;
   align-self: flex-end;
-  margin-bottom: 0.5cqw;
-  letter-spacing: 0;
+  margin-bottom: 1.2cqw;
 }
 
 .timer-danger {
