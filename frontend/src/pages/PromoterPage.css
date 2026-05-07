@@ -37,10 +37,10 @@
 }
 
 /* On portrait tablets (e.g. iPad held vertically) the h1 was massive;
-   scale it down to match the queue-name font size */
-@media (orientation: portrait) {
+   scale it to match .queue-name font size which is 2.5rem on portrait tablets */
+@media (orientation: portrait) and (min-width: 768px) {
   .promoter-title {
-    font-size: 1.1rem;
+    font-size: 2.5rem;
   }
 }
 
