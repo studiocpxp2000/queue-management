@@ -10,6 +10,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ── Performance: Debounced queue broadcast ──────────────────────────
+// Coalesce rapid-fire queueUpdate emissions into a single broadcast.
+// Under load, 500 registrations would normally fire 500 × N broadcasts.
+// This reduces it to ~1 broadcast per 300ms window.
+let queueUpdatePending = false;
+let queueUpdateTimer = null;
+
+function emitQueueUpdate(ioInstance) {
+    if (queueUpdatePending) return; // Already scheduled
+    queueUpdatePending = true;
+    queueUpdateTimer = setTimeout(() => {
+        ioInstance.emit('queueUpdate');
+        queueUpdatePending = false;
+    }, 300); // 300ms debounce window
+}
+
+// ── Performance: Cached settings ────────────────────────────────────
+// The defaultTimer value rarely changes but is read on every registration.
+// Cache it in memory and only refresh when settings are updated.
+let cachedDefaultTimer = 45;
+db.get(`SELECT value FROM settings WHERE key = 'defaultTimer'`, (err, row) => {
+    if (row) cachedDefaultTimer = parseInt(row.value);
+});
+
 const server = http.createServer(app);
 
 // Increase max listeners to handle many concurrent Socket.io connections
@@ -72,7 +96,7 @@ app.delete('/api/admin/players/:id', (req, res) => {
     const id = req.params.id;
     db.run(`DELETE FROM players WHERE id = ?`, id, function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        io.emit('queueUpdate');
+        emitQueueUpdate(io);
         res.json({ success: true });
     });
 });
@@ -81,7 +105,7 @@ app.delete('/api/admin/players', (req, res) => {
     db.run(`DELETE FROM players`, function(err) {
         if (err) return res.status(500).json({ error: err.message });
         db.run(`DELETE FROM sqlite_sequence WHERE name='players'`, function() {
-            io.emit('queueUpdate');
+            emitQueueUpdate(io);
             res.json({ success: true });
         });
     });
@@ -92,7 +116,7 @@ app.put('/api/admin/players/:id', (req, res) => {
     const { name, status, is_archived } = req.body;
     db.run(`UPDATE players SET name = ?, status = ?, is_archived = ? WHERE id = ?`, [name, status, is_archived, id], function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        io.emit('queueUpdate');
+        emitQueueUpdate(io);
         res.json({ success: true });
     });
 });
@@ -102,14 +126,13 @@ app.post('/api/players', (req, res) => {
     db.run(`INSERT INTO players (name, created_at) VALUES (?, datetime('now', '+5 hours', '+30 minutes'))`, [name], function(err) {
         if (err) return res.status(500).json({ error: err.message });
         
-        db.get(`SELECT value FROM settings WHERE key = 'defaultTimer'`, (err, row) => {
-            const timer = parseInt(row ? row.value : 45);
-            db.get(`SELECT COUNT(*) as position FROM players WHERE status = 'waiting' AND is_archived = 0 AND id <= ?`, [this.lastID], (err, countRow) => {
-                const position = countRow ? countRow.position : 1;
-                let waitTime = (position - 1) * timer;
-                io.emit('queueUpdate');
-                res.json({ success: true, position, waitTime, id: this.lastID });
-            });
+        const lastId = this.lastID;
+        const timer = cachedDefaultTimer; // Use cached value instead of DB query
+        db.get(`SELECT COUNT(*) as position FROM players WHERE status = 'waiting' AND is_archived = 0 AND id <= ?`, [lastId], (err, countRow) => {
+            const position = countRow ? countRow.position : 1;
+            let waitTime = (position - 1) * timer;
+            emitQueueUpdate(io);
+            res.json({ success: true, position, waitTime, id: lastId });
         });
     });
 });
@@ -148,8 +171,10 @@ app.post('/api/admin/settings', (req, res) => {
     const { key, value } = req.body;
     db.run(`UPDATE settings SET value = ? WHERE key = ?`, [value, key], function(err) {
         if (err) return res.status(500).json({ error: err.message });
+        // Refresh cached timer when settings change
+        if (key === 'defaultTimer') cachedDefaultTimer = parseInt(value);
         io.emit('settingsUpdate');
-        io.emit('queueUpdate'); // Recalculate wait times
+        emitQueueUpdate(io);
         res.json({ success: true });
     });
 });
@@ -188,17 +213,15 @@ io.on('connection', (socket) => {
         db.run(`UPDATE players SET status = 'completed' WHERE status = 'playing'`, (err) => {
             db.run(`UPDATE players SET status = 'playing' WHERE id = ?`, [playerId], (err) => {
                 db.get(`SELECT * FROM players WHERE id = ?`, [playerId], (err, newActiveRow) => {
-                    db.get(`SELECT value FROM settings WHERE key = 'defaultTimer'`, (err, row) => {
-                        const timer = parseInt(row ? row.value : 45);
-                        if (currentTimerTimeout) clearTimeout(currentTimerTimeout);
-                        
-                        pendingTimerId = playerId;
-                        pendingTimerDuration = timer;
-                        currentEndTime = 0;
-                        
-                        io.emit('queueUpdate');
-                        io.emit('preparePlayer', { id: playerId, name: newActiveRow.name, duration: timer });
-                    });
+                    const timer = cachedDefaultTimer; // Use cached value
+                    if (currentTimerTimeout) clearTimeout(currentTimerTimeout);
+                    
+                    pendingTimerId = playerId;
+                    pendingTimerDuration = timer;
+                    currentEndTime = 0;
+                    
+                    emitQueueUpdate(io);
+                    io.emit('preparePlayer', { id: playerId, name: newActiveRow.name, duration: timer });
                 });
             });
         });
@@ -216,7 +239,7 @@ io.on('connection', (socket) => {
         currentTimerTimeout = setTimeout(() => {
             db.run(`UPDATE players SET status = 'completed' WHERE id = ?`, [playerId], () => {
                 io.emit('playerCompleted', playerId);
-                io.emit('queueUpdate');
+                emitQueueUpdate(io);
                 pendingTimerId = null;
             });
         }, timer * 1000);
@@ -224,13 +247,13 @@ io.on('connection', (socket) => {
 
     socket.on('archivePlayer', (playerId) => {
         db.run(`UPDATE players SET is_archived = 1 WHERE id = ?`, [playerId], (err) => {
-            io.emit('queueUpdate');
+            emitQueueUpdate(io);
         });
     });
 
     socket.on('restorePlayer', (playerId) => {
         db.run(`UPDATE players SET is_archived = 0 WHERE id = ?`, [playerId], (err) => {
-            io.emit('queueUpdate');
+            emitQueueUpdate(io);
         });
     });
 
