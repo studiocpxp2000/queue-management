@@ -1,3 +1,11 @@
+/* Local digital font — used ONLY for the countdown timer on the player card */
+@font-face {
+  font-family: 'Digital7';
+  src: url('/assets/digital/digital-7.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .player-card-layout {
   display: flex;
   justify-content: center;
@@ -59,8 +67,8 @@
 .dynamic-timer {
   font-size: 10cqw;
   font-weight: 900;
-  /* Orbitron gives the authentic digital-clock look */
-  font-family: 'Orbitron', monospace;
+  /* Digital-7: local digital clock font, used ONLY here */
+  font-family: 'Digital7', monospace;
   color: #FFFFFF;
   line-height: 1;
   letter-spacing: 0.05em;

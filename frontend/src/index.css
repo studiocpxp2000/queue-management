@@ -38,7 +38,7 @@ h1, h2, h3 {
 
 @media (orientation: portrait) and (min-width: 768px) {
   .app-container {
-    padding: 4rem;
+    padding: 2rem;
   }
   h1 {
     font-size: 4rem;
