@@ -1,7 +1,7 @@
 services:
   app:
     # REPLACE <REPO_OWNER> with the GitHub username of the person who owns the repository
-    image: ghcr.io/studiocpxp2000/queue-management:latest
+    image: ghcr.io/studiocpxp2000/queue-management:main
     container_name: queue-management-app
     restart: always
     networks:
