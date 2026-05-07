@@ -45,7 +45,7 @@
 }
 
 .dynamic-player-name {
-  font-size: 5cqw;
+  font-size: 3.5cqw;
   color: #FFFFFF;
   margin-bottom: 2%;
   word-break: break-word;
@@ -59,9 +59,11 @@
 .dynamic-timer {
   font-size: 10cqw;
   font-weight: 900;
-  font-family: 'Outfit', sans-serif;
+  /* Orbitron gives the authentic digital-clock look */
+  font-family: 'Orbitron', monospace;
   color: #FFFFFF;
   line-height: 1;
+  letter-spacing: 0.05em;
 }
 
 .timer-danger {
