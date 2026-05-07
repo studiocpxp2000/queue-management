@@ -1,0 +1,76 @@
+.player-card-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  overflow: hidden;
+}
+
+/* 
+  Ensures the wrapper is exactly 16:9, but completely covers the viewport.
+  This fixes the "gaps" on corners (letterboxing) by scaling the aspect-ratio 
+  box beyond the viewport if necessary, cutting off the excess safely 
+  due to overflow: hidden on the parent layout.
+*/
+.player-card-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 56.25vw; /* 16:9 Aspect Ratio */
+  min-height: 100vh;
+  min-width: 177.77vh; /* 16:9 Aspect Ratio */
+  flex-shrink: 0;
+  container-type: inline-size;
+}
+
+.player-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.player-content-box {
+  position: absolute;
+  top: 44.5%;
+  left: 9.8%;
+  width: 55.4%;
+  height: 41.5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2%;
+}
+
+.dynamic-player-name {
+  font-size: 5cqw;
+  color: #FFFFFF;
+  margin-bottom: 2%;
+  word-break: break-word;
+  text-transform: uppercase;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.dynamic-timer {
+  font-size: 10cqw;
+  font-weight: 900;
+  font-family: 'Outfit', sans-serif;
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+.timer-danger {
+  color: #E31837;
+}
+
+.dynamic-waiting-text {
+  font-size: 4cqw;
+  color: #9CA3AF;
+  font-family: 'Outfit', sans-serif;
+  text-align: center;
+}
