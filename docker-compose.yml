@@ -9,8 +9,8 @@ services:
     environment:
       - PORT=3012
     volumes:
-      # Persistent volume for the SQLite database so data survives restarts
-      - queue-data:/usr/src/app/backend/database.sqlite
+      # Bind mount the local SQLite file so it is not treated as a directory by Docker
+      - ./backend/database.sqlite:/usr/src/app/backend/database.sqlite
     labels:
       - "traefik.enable=true"
       # HTTP -> HTTPS Redirect
@@ -24,9 +24,6 @@ services:
       - "traefik.http.routers.queuemanagement-secure.tls.certresolver=letsencrypt"
       # Internal Docker Port mapping to Traefik
       - "traefik.http.services.queuemanagement.loadbalancer.server.port=3012"
-
-volumes:
-  queue-data:
 
 networks:
   proxy:
