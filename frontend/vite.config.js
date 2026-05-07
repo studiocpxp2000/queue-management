@@ -40,5 +40,15 @@ export default defineConfig({
   plugins: [react(), customRouteLogger()],
   server: {
     port: 3013,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3012',
+        changeOrigin: true
+      },
+      '/socket.io': {
+        target: 'http://localhost:3012',
+        ws: true
+      }
+    }
   }
 })

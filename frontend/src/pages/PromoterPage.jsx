@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import Header from '../components/Header';
 import './PromoterPage.css';
 
-const socket = io('http://localhost:3012');
+const socket = io('');
 
 const PromoterPage = () => {
   const [queue, setQueue] = useState([]);
@@ -12,7 +12,7 @@ const PromoterPage = () => {
 
   const fetchQueue = async () => {
     try {
-      const res = await axios.get('http://localhost:3012/api/queue');
+      const res = await axios.get('/api/queue');
       setQueue(res.data);
     } catch (error) {
       console.error('Error fetching queue:', error);

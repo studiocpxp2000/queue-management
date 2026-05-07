@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import Header from '../components/Header';
 import './InputPage.css';
 
-const socket = io('http://localhost:3012');
+const socket = io('');
 
 const InputPage = () => {
   const [name, setName] = useState('');
@@ -16,7 +16,7 @@ const InputPage = () => {
 
   const checkStatus = async (id) => {
     try {
-      const res = await axios.get(`http://localhost:3012/api/players/${id}/status`);
+      const res = await axios.get(`/api/players/${id}/status`);
       setStatus(res.data.status);
     } catch (e) {
       console.error(e);
@@ -26,9 +26,9 @@ const InputPage = () => {
   const fetchWaitTime = async (pid) => {
     try {
       const [qRes, aRes, sRes] = await Promise.all([
-        axios.get('http://localhost:3012/api/queue'),
-        axios.get('http://localhost:3012/api/active-player'),
-        axios.get('http://localhost:3012/api/settings')
+        axios.get('/api/queue'),
+        axios.get('/api/active-player'),
+        axios.get('/api/settings')
       ]);
       const queue = qRes.data;
       const activePlayer = aRes.data;
@@ -102,7 +102,7 @@ const InputPage = () => {
     if (!name.trim()) return;
 
     try {
-      const res = await axios.post('http://localhost:3012/api/players', { name });
+      const res = await axios.post('/api/players', { name });
       if (res.data.success) {
         setSubmitted(true);
         setRegisteredName(name);

@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import Header from '../components/Header';
 import './QueuePage.css';
 
-const socket = io('http://localhost:3012');
+const socket = io('');
 
 const QueuePage = () => {
   const [queue, setQueue] = useState([]);
@@ -14,9 +14,9 @@ const QueuePage = () => {
   const fetchQueue = async () => {
     try {
       const [qRes, aRes, sRes] = await Promise.all([
-        axios.get('http://localhost:3012/api/queue'),
-        axios.get('http://localhost:3012/api/active-player'),
-        axios.get('http://localhost:3012/api/settings')
+        axios.get('/api/queue'),
+        axios.get('/api/active-player'),
+        axios.get('/api/settings')
       ]);
       setQueue(qRes.data);
       setActivePlayer(aRes.data);

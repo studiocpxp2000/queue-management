@@ -1,5 +1,6 @@
 const express = require('express');
 const http = require('http');
+const path = require('path');
 const { Server } = require('socket.io');
 const cors = require('cors');
 require('dotenv').config();
@@ -140,6 +141,13 @@ app.post('/api/admin/settings', (req, res) => {
         res.json({ success: true });
     });
 });
+
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, 'public')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 
 let currentTimerTimeout = null;
 let currentEndTime = 0;

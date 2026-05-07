@@ -1,0 +1,33 @@
+services:
+  app:
+    # REPLACE <REPO_OWNER> with the GitHub username of the person who owns the repository
+    image: ghcr.io/studiocpxp2000/queue-management:latest
+    container_name: queue-management-app
+    restart: always
+    networks:
+      - proxy
+    environment:
+      - PORT=3012
+    volumes:
+      # Persistent volume for the SQLite database so data survives restarts
+      - queue-data:/usr/src/app/backend/database.sqlite
+    labels:
+      - "traefik.enable=true"
+      # HTTP -> HTTPS Redirect
+      - "traefik.http.routers.queuemanagement.rule=Host(`queuemanagement.2209.in`)"
+      - "traefik.http.routers.queuemanagement.entrypoints=web"
+      - "traefik.http.routers.queuemanagement.middlewares=redirect-to-https"
+      # HTTPS Configuration
+      - "traefik.http.routers.queuemanagement-secure.rule=Host(`queuemanagement.2209.in`)"
+      - "traefik.http.routers.queuemanagement-secure.entrypoints=websecure"
+      - "traefik.http.routers.queuemanagement-secure.tls=true"
+      - "traefik.http.routers.queuemanagement-secure.tls.certresolver=letsencrypt"
+      # Internal Docker Port mapping to Traefik
+      - "traefik.http.services.queuemanagement.loadbalancer.server.port=3012"
+
+volumes:
+  queue-data:
+
+networks:
+  proxy:
+    external: true

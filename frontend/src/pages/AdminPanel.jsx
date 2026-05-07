@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import Header from '../components/Header';
 import './AdminPanel.css';
 
-const socket = io('http://localhost:3012');
+const socket = io('');
 
 const AdminPanel = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -27,7 +27,7 @@ const AdminPanel = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3012/api/admin/login', { username, password });
+      const res = await axios.post('/api/admin/login', { username, password });
       if (res.data.success) {
         setIsAuthenticated(true);
         localStorage.setItem('isAdminLoggedIn', 'true');
@@ -40,11 +40,11 @@ const AdminPanel = () => {
 
   const fetchData = async () => {
     try {
-      const pRes = await axios.get(`http://localhost:3012/api/admin/players?page=${page}&limit=10`);
+      const pRes = await axios.get(`/api/admin/players?page=${page}&limit=10`);
       setPlayers(pRes.data.data);
       setTotalPages(pRes.data.totalPages);
 
-      const sRes = await axios.get('http://localhost:3012/api/settings');
+      const sRes = await axios.get('/api/settings');
       if (sRes.data.defaultTimer) {
         setDefaultTimer(parseInt(sRes.data.defaultTimer));
       }
@@ -63,7 +63,7 @@ const AdminPanel = () => {
 
   const handleUpdateTimer = async () => {
     try {
-      await axios.post('http://localhost:3012/api/admin/settings', { key: 'defaultTimer', value: defaultTimer.toString() });
+      await axios.post('/api/admin/settings', { key: 'defaultTimer', value: defaultTimer.toString() });
       alert('Timer updated successfully');
     } catch (err) {
       console.error('Error updating timer');
@@ -72,7 +72,7 @@ const AdminPanel = () => {
 
   const handleHardDelete = async (id) => {
     if (window.confirm('Permanently delete this user? This cannot be undone.')) {
-      await axios.delete(`http://localhost:3012/api/admin/players/${id}`);
+      await axios.delete(`/api/admin/players/${id}`);
       fetchData();
     }
   };
@@ -80,7 +80,7 @@ const AdminPanel = () => {
   const handleResetAll = async () => {
     if (window.confirm('Are you absolutely sure you want to delete ALL players? This action cannot be undone.')) {
       if (window.confirm('Please confirm again to delete.')) {
-        await axios.delete(`http://localhost:3012/api/admin/players`);
+        await axios.delete(`/api/admin/players`);
         setPage(1);
         fetchData();
       }
@@ -103,7 +103,7 @@ const AdminPanel = () => {
   };
 
   const saveEdit = async (id) => {
-    await axios.put(`http://localhost:3012/api/admin/players/${id}`, { name: editName, status: editStatus, is_archived: editArchived ? 1 : 0 });
+    await axios.put(`/api/admin/players/${id}`, { name: editName, status: editStatus, is_archived: editArchived ? 1 : 0 });
     setEditingPlayer(null);
     fetchData();
   };

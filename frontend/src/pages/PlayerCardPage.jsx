@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import './PlayerCardPage.css';
-const socket = io('http://localhost:3012');
+const socket = io('');
 
 const PlayerCardPage = () => {
   const [activePlayer, setActivePlayer] = useState(null);
