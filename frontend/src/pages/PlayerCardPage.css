@@ -66,12 +66,32 @@
 
 .dynamic-timer {
   font-size: 10cqw;
-  font-weight: 900;
-  /* Digital-7: local digital clock font, used ONLY here */
-  font-family: 'Digital7', monospace;
-  color: #FFFFFF;
   line-height: 1;
+  color: #FFFFFF;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5cqw;
+}
+
+/* The actual countdown number — uses Digital-7 local font */
+.timer-digits {
+  font-family: 'Digital7', monospace;
+  font-size: inherit;
+  font-weight: 900;
   letter-spacing: 0.05em;
+  color: inherit;
+}
+
+/* The 's' unit label — uses Outfit so it looks clearly different from the digit */
+.timer-unit {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 4cqw;
+  color: inherit;
+  opacity: 0.75;
+  align-self: flex-end;
+  margin-bottom: 0.5cqw;
+  letter-spacing: 0;
 }
 
 .timer-danger {
