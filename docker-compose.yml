@@ -16,7 +16,8 @@ services:
       # HTTP -> HTTPS Redirect
       - "traefik.http.routers.queuemanagement.rule=Host(`queuemanagement.2209.in`)"
       - "traefik.http.routers.queuemanagement.entrypoints=web"
-      - "traefik.http.routers.queuemanagement.middlewares=redirect-to-https"
+      - "traefik.http.routers.queuemanagement.middlewares=queuemanagement-redirect"
+      - "traefik.http.middlewares.queuemanagement-redirect.redirectscheme.scheme=https"
       # HTTPS Configuration
       - "traefik.http.routers.queuemanagement-secure.rule=Host(`queuemanagement.2209.in`)"
       - "traefik.http.routers.queuemanagement-secure.entrypoints=websecure"
