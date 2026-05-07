@@ -92,7 +92,7 @@ const PlayerCardPage = () => {
           {activePlayer ? (
             <>
               <h1 className="dynamic-player-name">{activePlayer.name}</h1>
-              <div className={`dynamic-timer ${timeLeft <= 10 ? 'pulse-text timer-danger' : ''}`}>
+              <div className={`dynamic-timer ${timeLeft <= 5 ? 'pulse-text timer-danger' : ''}`}>
                 {timeLeft}s
               </div>
             </>
