@@ -42,13 +42,14 @@ const PromoterPage = () => {
   };
 
   return (
-    <div>
-      <Header isSpaced={true} />
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <h1>Promoter Control</h1>
-          <button 
-            className="btn" 
+    <div className="promoter-layout">
+      {/* Sticky Header + Control Bar */}
+      <div className="promoter-sticky-top">
+        <Header isSpaced={true} />
+        <div className="promoter-control-bar">
+          <h1 className="promoter-title">Promoter Control</h1>
+          <button
+            className="btn"
             onClick={handleStart}
             disabled={!selectedPlayerId}
             style={{ opacity: selectedPlayerId ? 1 : 0.5 }}
@@ -56,21 +57,24 @@ const PromoterPage = () => {
             START GAME
           </button>
         </div>
+      </div>
 
+      {/* Scrollable queue list only */}
+      <div className="promoter-scroll-area">
         <div className="queue-list">
           {queue.length === 0 ? (
             <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>No one is in the queue right now.</p>
           ) : (
             queue.map((player, index) => (
-              <div 
-                key={player.id} 
+              <div
+                key={player.id}
                 className={`queue-item ${selectedPlayerId === player.id ? 'active' : ''}`}
                 style={{ cursor: 'pointer' }}
                 onClick={() => setSelectedPlayerId(player.id)}
               >
                 <div className="queue-item-info">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     checked={selectedPlayerId === player.id}
                     onChange={() => setSelectedPlayerId(player.id)}
                     style={{ transform: 'scale(1.5)', cursor: 'pointer' }}
@@ -78,8 +82,8 @@ const PromoterPage = () => {
                   <span className="queue-number">#{index + 1}</span>
                   <span className="queue-name">{player.name}</span>
                 </div>
-                <button 
-                  className="btn-icon" 
+                <button
+                  className="btn-icon"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSoftDelete(player.id);
