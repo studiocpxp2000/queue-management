@@ -17,6 +17,10 @@
   object-fit: contain;
 }
 
+.nba-logo {
+  height: 60px;
+}
+
 /* Portrait / Vertical Display — keep logos small and in a row */
 @media (orientation: portrait) {
   .header {
@@ -28,12 +32,18 @@
   .logo {
     height: 50px;
   }
+  .nba-logo {
+  height: 60px;
+}
 }
 
 @media (max-width: 480px) {
   .logo {
     height: 28px;
   }
+  .nba-logo {
+  height: 38px;
+}
   .header {
     gap: 0.75rem;
     padding: 0.5rem 0.75rem;

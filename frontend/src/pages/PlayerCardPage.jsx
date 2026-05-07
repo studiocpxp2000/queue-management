@@ -86,18 +86,28 @@ const PlayerCardPage = () => {
       )}
 
       <div className="player-card-wrapper">
-        <img src="/assets/bg.png" alt="Dunk Challenge Background" className="player-card-image" />
+        <img src="/assets/bg-2.png" alt="Dunk Challenge Background" className="player-card-image" />
         
         <div className="player-content-box">
           {activePlayer ? (
             <>
-              <h1 className="dynamic-player-name">{activePlayer.name}</h1>
+              <h1 
+                className="dynamic-player-name"
+                style={{ fontSize: activePlayer.name.length > 15 ? '2.5cqw' : (activePlayer.name.length > 10 ? '3cqw' : '3.5cqw') }}
+              >
+                {activePlayer.name}
+              </h1>
               <div className={`dynamic-timer ${timeLeft <= 5 ? 'pulse-text timer-danger' : ''}`}>
                 <span className="timer-digits">{timeLeft}</span><span className="timer-unit">S</span>
               </div>
             </>
           ) : (
-            <h1 className="dynamic-waiting-text">WAITING FOR NEXT USER...</h1>
+            <>
+              <h1 className="dynamic-player-name" style={{ color: '#9CA3AF', opacity: 0.5 }}>Player Name</h1>
+              <div className="dynamic-timer timer-danger">
+                <span className="timer-digits">00</span><span className="timer-unit">S</span>
+              </div>
+            </>
           )}
         </div>
       </div>

@@ -41,15 +41,15 @@
 
 .player-content-box {
   position: absolute;
-  top: 44.5%;
-  left: 10.8%;
-  width: 55.4%;
-  height: 41.5%;
+  top: 55%;    /* Top of the red dashed box */
+  left: 25.5%; /* Left edge of the red dashed box */
+  width: 49%;  /* Width of the red dashed box */
+  height: 33%; /* Height of the red dashed box */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2%;
+  padding: 1%;
 }
 
 .dynamic-player-name {
@@ -65,12 +65,13 @@
 }
 
 .dynamic-timer {
-  font-size: 10cqw;
+  position: relative;
+  font-size: 11cqw;
   line-height: 1;
   color: #FFFFFF;
   display: flex;
+  justify-content: center;
   align-items: baseline;
-  gap: 0.5cqw;
 }
 
 /* The actual countdown number — uses Digital-7 local font */
@@ -82,28 +83,34 @@
   color: inherit;
 }
 
-/* NBA Red 'S' unit — highly polished and distinct from the digits */
+/* The 'S' unit label — absolutely positioned so it doesn't shift the digits off-center */
 .timer-unit {
+  position: absolute;
+  left: 100%; /* Sits exactly to the right of the digit container */
+  bottom: 0.15em; /* Adjust vertical alignment to match baseline visually */
   font-family: 'Outfit', sans-serif;
   font-weight: 600;
-  font-size: 2.2cqw;
-  color: var(--accent-red); /* Brand Red */
+  font-size: 3cqw;
+  color: inherit;
+  opacity: 0.8;
   text-transform: uppercase;
-  margin-left: 1cqw;
-  align-self: flex-end;
-  margin-bottom: 1.8cqw; /* Slightly raised from the absolute bottom */
-  letter-spacing: 0.15em;
-  opacity: 1; /* Full brightness for the brand color */
-  text-shadow: 0 0 10px rgba(227, 24, 55, 0.3);
+  letter-spacing: 0.1em;
+  margin-left: 0.5cqw;
 }
 
 .timer-danger {
-  color: #E31837;
+  color: #FF0000;
 }
 
-.dynamic-waiting-text {
-  font-size: 4cqw;
-  color: #9CA3AF;
-  font-family: 'Outfit', sans-serif;
-  text-align: center;
+.timer-danger .timer-unit {
+  opacity: 1;
+}
+
+.pulse-text {
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }

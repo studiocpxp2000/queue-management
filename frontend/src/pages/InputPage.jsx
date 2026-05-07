@@ -184,7 +184,7 @@ const InputPage = () => {
               className="input-field" 
               value={name} 
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
+              placeholder="Enter your full name"
               required
             />
           </div>
