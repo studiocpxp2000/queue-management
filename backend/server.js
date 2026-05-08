@@ -251,6 +251,12 @@ io.on('connection', (socket) => {
         });
     });
 
+    socket.on('softDeletePlayer', (playerId) => {
+        db.run(`UPDATE players SET is_archived = 1 WHERE id = ?`, [playerId], (err) => {
+            emitQueueUpdate(io);
+        });
+    });
+
     socket.on('restorePlayer', (playerId) => {
         db.run(`UPDATE players SET is_archived = 0 WHERE id = ?`, [playerId], (err) => {
             emitQueueUpdate(io);
