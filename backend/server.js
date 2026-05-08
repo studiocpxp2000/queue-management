@@ -92,14 +92,14 @@ app.get('/api/admin/players', (req, res) => {
     });
 });
 
-app.delete('/api/admin/players', (req, res) => {
-    db.run(`DELETE FROM players`, function(err) {
+app.delete('/api/admin/danger/reset-all-players', (req, res) => {
+    db.run(`DELETE FROM players`, (err) => {
         if (err) return res.status(500).json({ error: err.message });
-        db.run(`DELETE FROM sqlite_sequence WHERE name='players'`, function() {
-            console.log('Admin: Database cleared (all players deleted)');
-            emitQueueUpdate(io);
-            res.json({ success: true });
-        });
+        // Optional sequence reset, don't block if it fails
+        db.run(`DELETE FROM sqlite_sequence WHERE name='players'`);
+        console.log('CRITICAL: Admin performed full database reset.');
+        emitQueueUpdate(io);
+        res.json({ success: true });
     });
 });
 

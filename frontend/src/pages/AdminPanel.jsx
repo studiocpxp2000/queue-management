@@ -82,11 +82,15 @@ const AdminPanel = () => {
     if (window.confirm('Are you absolutely sure you want to delete ALL players? This action cannot be undone.')) {
       if (window.confirm('Please confirm again to delete.')) {
         try {
-          await axios.delete(`/api/admin/players`);
-          alert('All players have been deleted successfully.');
-          setPage(1);
-          fetchData();
+          console.log('Attempting full reset via /api/admin/danger/reset-all-players...');
+          const res = await axios.delete(`/api/admin/danger/reset-all-players`);
+          if (res.data.success) {
+            alert('All players have been deleted successfully.');
+            setPage(1);
+            fetchData();
+          }
         } catch (err) {
+          console.error('Reset failed:', err);
           alert('Failed to delete players: ' + (err.response?.data?.error || err.message));
         }
       }
@@ -186,7 +190,7 @@ const AdminPanel = () => {
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <h3 style={{ margin: 0 }}>Players Directory</h3>
-            <button className="btn" style={{ backgroundColor: '#991b1b', color: 'white', borderColor: '#991b1b', padding: '0.5rem 1rem' }} onClick={handleResetAll}>Reset All Players</button>
+            <button className="btn" style={{ backgroundColor: '#991b1b', color: 'white', borderColor: '#991b1b', padding: '0.5rem 1rem' }} onClick={handleResetAll}>RESET ALL DATA (V2)</button>
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table className="admin-table">
