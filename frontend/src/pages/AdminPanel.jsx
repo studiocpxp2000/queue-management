@@ -81,9 +81,14 @@ const AdminPanel = () => {
   const handleResetAll = async () => {
     if (window.confirm('Are you absolutely sure you want to delete ALL players? This action cannot be undone.')) {
       if (window.confirm('Please confirm again to delete.')) {
-        await axios.delete(`/api/admin/players`);
-        setPage(1);
-        fetchData();
+        try {
+          await axios.delete(`/api/admin/players`);
+          alert('All players have been deleted successfully.');
+          setPage(1);
+          fetchData();
+        } catch (err) {
+          alert('Failed to delete players: ' + (err.response?.data?.error || err.message));
+        }
       }
     }
   };

@@ -92,22 +92,23 @@ app.get('/api/admin/players', (req, res) => {
     });
 });
 
+app.delete('/api/admin/players', (req, res) => {
+    db.run(`DELETE FROM players`, function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        db.run(`DELETE FROM sqlite_sequence WHERE name='players'`, function() {
+            console.log('Admin: Database cleared (all players deleted)');
+            emitQueueUpdate(io);
+            res.json({ success: true });
+        });
+    });
+});
+
 app.delete('/api/admin/players/:id', (req, res) => {
     const id = req.params.id;
     db.run(`DELETE FROM players WHERE id = ?`, id, function(err) {
         if (err) return res.status(500).json({ error: err.message });
         emitQueueUpdate(io);
         res.json({ success: true });
-    });
-});
-
-app.delete('/api/admin/players', (req, res) => {
-    db.run(`DELETE FROM players`, function(err) {
-        if (err) return res.status(500).json({ error: err.message });
-        db.run(`DELETE FROM sqlite_sequence WHERE name='players'`, function() {
-            emitQueueUpdate(io);
-            res.json({ success: true });
-        });
     });
 });
 
