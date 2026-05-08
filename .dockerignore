@@ -1,0 +1,16 @@
+node_modules
+.git
+.github
+reports
+load_test.js
+package.json
+package-lock.json
+ssh-key-travel-app.txt
+backend/add_mock_data.js
+backend/.env
+backend/database.sqlite
+backend/database.sqlite-shm
+backend/database.sqlite-wal
+backend/node_modules
+frontend/node_modules
+*.md

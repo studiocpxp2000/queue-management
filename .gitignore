@@ -1,3 +1,7 @@
 node_modules
 load_test.js
 reports/
+package.json
+package-lock.json
+ssh-key-travel-app.txt
+backend/add_mock_data.js
