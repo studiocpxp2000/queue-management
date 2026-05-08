@@ -93,13 +93,20 @@ app.get('/api/admin/players', (req, res) => {
 });
 
 app.delete('/api/admin/danger/reset-all-players', (req, res) => {
-    db.run(`DELETE FROM players`, (err) => {
-        if (err) return res.status(500).json({ error: err.message });
-        // Optional sequence reset, don't block if it fails
-        db.run(`DELETE FROM sqlite_sequence WHERE name='players'`);
-        console.log('CRITICAL: Admin performed full database reset.');
-        emitQueueUpdate(io);
-        res.json({ success: true });
+    db.serialize(() => {
+        db.run(`DROP TABLE IF EXISTS players`);
+        db.run(`CREATE TABLE IF NOT EXISTS players (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            status TEXT DEFAULT 'waiting',
+            is_archived INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT (datetime('now', '+5 hours', '+30 minutes'))
+        )`, (err) => {
+            if (err) return res.status(500).json({ error: err.message });
+            console.log('NUCLEAR RESET: Database wiped and table recreated.');
+            emitQueueUpdate(io);
+            res.json({ success: true });
+        });
     });
 });
 
