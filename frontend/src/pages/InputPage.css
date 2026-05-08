@@ -1,2 +1,39 @@
 /* Input Page specific styles */
 /* Uses global shared UI classes like .card, .btn, .input-field from index.css */
+
+.registration-title {
+  color: var(--accent-red);
+  font-size: clamp(1.5rem, 6vw, 2.2rem);
+  white-space: nowrap;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.wait-time-paragraph {
+  line-height: 1.5;
+}
+
+.timer-val {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.minutes-label {
+  font-weight: 800;
+  font-size: 1.1rem;
+  margin-left: 0.25rem;
+}
+
+.notify-paragraph {
+  line-height: 1.5;
+  font-size: 0.95rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Ensure card padding is tighter on mobile for better text fit */
+@media (max-width: 480px) {
+  .card {
+    padding: 1.5rem 1rem;
+  }
+}

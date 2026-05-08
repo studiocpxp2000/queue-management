@@ -147,17 +147,25 @@ const InputPage = () => {
       );
     } else {
       content = (
-        <>
-          <h2 style={{ color: 'var(--accent-red)' }}>You’re on the list!</h2>
+        <div className="registration-success">
+          <h2 className="registration-title">You’re on the list!</h2>
           <br />
           <p>Hi <strong>{registeredName}</strong>, you’re successfully registered for the Dunk Challenge at Tissot × BUDX NBA House.</p>
           <br />
-          <p>Your estimated wait time is <strong>{waitTime} minutes</strong>.</p>
+          <p className="wait-time-paragraph">
+            Your estimated wait time is <br/>
+            <span style={{ whiteSpace: 'nowrap', display: 'inline-block' }}>
+              <span className="timer-val">{waitTime}</span> <span className="minutes-label">minutes.</span>
+            </span>
+          </p>
           <br />
-          <p>We’ll notify you when it’s your turn, get ready to beat the clock!</p>
+          <p className="notify-paragraph">
+            We’ll notify you when it’s your turn, <br/>
+            get ready to beat the clock!
+          </p>
           <br />
           <p>See You!<br/><strong>Team Tissot</strong></p>
-        </>
+        </div>
       );
     }
 
