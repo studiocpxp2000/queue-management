@@ -3,5 +3,6 @@ node_modules/
 database.sqlite
 database.sqlite-shm
 database.sqlite-wal
+data/
 .DS_Store
 .git

@@ -77,9 +77,8 @@ jobs:
             # Login to GHCR to pull the private image
             echo ${{ secrets.GH_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
-            # Create an empty db file if it doesn't exist so Docker doesn't accidentally map a folder
-            mkdir -p backend
-            touch backend/database.sqlite
+            # Create the data directory for SQLite (all 3 WAL files live here)
+            mkdir -p data
 
             # Pull new image and recreate container
             docker compose pull

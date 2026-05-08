@@ -17,8 +17,8 @@ services:
       - ADMIN_PASS=${ADMIN_PASS}
       - NODE_OPTIONS=--max-old-space-size=512
     volumes:
-      # Bind mount the local SQLite file so it is not treated as a directory by Docker
-      - ./backend/database.sqlite:/usr/src/app/backend/database.sqlite
+      # Mount the entire data/ directory so all SQLite WAL files persist
+      - ./data:/usr/src/app/backend/data
     labels:
       - "traefik.enable=true"
       # HTTP -> HTTPS Redirect

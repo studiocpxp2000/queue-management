@@ -2,6 +2,7 @@ node_modules
 .git
 .github
 reports
+data
 load_test.js
 package.json
 package-lock.json
