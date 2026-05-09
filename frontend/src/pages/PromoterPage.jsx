@@ -9,6 +9,8 @@ const socket = io('');
 const PromoterPage = () => {
   const [queue, setQueue] = useState([]);
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
+  const [newPlayerName, setNewPlayerName] = useState('');
+  const [addStatus, setAddStatus] = useState(null); // 'success' | 'error' | null
 
   const fetchQueue = async () => {
     try {
@@ -34,6 +36,23 @@ const PromoterPage = () => {
     setSelectedPlayerId(null);
   };
 
+  const handleAddPlayer = async (e) => {
+    e.preventDefault();
+    if (!newPlayerName.trim()) return;
+    try {
+      const res = await axios.post('/api/players', { name: newPlayerName.trim() });
+      if (res.data.success) {
+        setNewPlayerName('');
+        setAddStatus('success');
+        setTimeout(() => setAddStatus(null), 2000);
+      }
+    } catch (error) {
+      console.error('Error adding player:', error);
+      setAddStatus('error');
+      setTimeout(() => setAddStatus(null), 2500);
+    }
+  };
+
   const handleSoftDelete = (playerId) => {
     if (window.confirm("Are you sure you want to remove this player from the queue?")) {
       socket.emit('softDeletePlayer', playerId);
@@ -57,6 +76,26 @@ const PromoterPage = () => {
             START GAME
           </button>
         </div>
+
+        {/* Add Player Form */}
+        <form className="promoter-add-bar" onSubmit={handleAddPlayer}>
+          <input
+            type="text"
+            className="input-field promoter-add-input"
+            placeholder="Enter player name to register..."
+            value={newPlayerName}
+            onChange={(e) => setNewPlayerName(e.target.value)}
+            id="promoter-add-player-input"
+          />
+          <button
+            type="submit"
+            className={`btn promoter-add-btn ${addStatus ? `add-btn--${addStatus}` : ''}`}
+            disabled={!newPlayerName.trim()}
+            id="promoter-add-player-btn"
+          >
+            {addStatus === 'success' ? '✓ Added' : addStatus === 'error' ? '✗ Failed' : '+ Add'}
+          </button>
+        </form>
       </div>
 
       {/* Scrollable queue list only */}
