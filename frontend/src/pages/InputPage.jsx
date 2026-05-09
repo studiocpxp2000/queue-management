@@ -97,6 +97,30 @@ const InputPage = () => {
     };
   }, []);
 
+  // When the challenge is completed, show the message briefly then reset
+  // so the player can register again for another round.
+  useEffect(() => {
+    if (status === 'completed') {
+      const resetTimer = setTimeout(() => {
+        // Clear all registration data from localStorage
+        localStorage.removeItem('registered');
+        localStorage.removeItem('registeredName');
+        localStorage.removeItem('waitTime');
+        localStorage.removeItem('playerId');
+
+        // Reset component state back to the registration form
+        setSubmitted(false);
+        setName('');
+        setRegisteredName('');
+        setPlayerId(null);
+        setWaitTime(0);
+        setStatus('waiting');
+      }, 10000); // 10 seconds to read the completion message
+
+      return () => clearTimeout(resetTimer);
+    }
+  }, [status]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim()) return;
