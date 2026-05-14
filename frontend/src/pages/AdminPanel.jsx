@@ -82,7 +82,6 @@ const AdminPanel = () => {
     if (window.confirm('Are you absolutely sure you want to delete ALL players? This action cannot be undone.')) {
       if (window.confirm('Please confirm again to delete.')) {
         try {
-          console.log('Attempting full reset via /api/admin/danger/reset-all-players...');
           const res = await axios.delete(`/api/admin/danger/reset-all-players`);
           if (res.data.success) {
             alert('All players have been deleted successfully.');
@@ -90,8 +89,8 @@ const AdminPanel = () => {
             fetchData();
           }
         } catch (err) {
-          console.error('Reset failed:', err);
-          alert('Failed to delete players: ' + (err.response?.data?.error || err.message));
+          const errorMsg = err.response?.data?.error || err.message;
+          alert('Failed to delete players: ' + errorMsg);
         }
       }
     }

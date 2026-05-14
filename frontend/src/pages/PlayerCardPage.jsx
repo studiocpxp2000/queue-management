@@ -26,6 +26,7 @@ const PlayerCardPage = () => {
           animationFrameId = requestAnimationFrame(updateTimer);
         } else {
           targetEndTime = 0;
+          endAudio.currentTime = 0;
           endAudio.play().catch(e => console.error("Error playing end.wav:", e));
         }
       }
@@ -39,6 +40,7 @@ const PlayerCardPage = () => {
       targetEndTime = 0;
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       
+      startAudio.currentTime = 0;
       startAudio.play().catch(e => {
          console.error("Error playing start.wav:", e);
          socket.emit('beginTimer');
@@ -57,6 +59,10 @@ const PlayerCardPage = () => {
     });
 
     socket.on('playerCompleted', () => {
+      if (targetEndTime > 0) {
+        endAudio.currentTime = 0;
+        endAudio.play().catch(e => console.error("Error playing end.wav on completion event:", e));
+      }
       setActivePlayer(null);
       setTimeLeft(0);
       targetEndTime = 0;
